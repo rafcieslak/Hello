@@ -8,6 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -21,5 +22,22 @@
 </head>
 <body>
     <h1>Hello World! 🌸</h1>
+    <p id="visit-tracker"></p>
+
+    <script>
+        let visitCount = localStorage.getItem('visitCount');
+        if (!visitCount) {
+            visitCount = 0;
+        }
+        visitCount = parseInt(visitCount) + 1;
+        localStorage.setItem('visitCount', visitCount);
+
+        const trackerElement = document.getElementById('visit-tracker');
+        if (visitCount === 1) {
+            trackerElement.textContent = 'You have visited this page 1 time.';
+        } else {
+            trackerElement.textContent = `You have visited this page ${visitCount} times.`;
+        }
+    </script>
 </body>
 </html>
