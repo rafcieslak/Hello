@@ -22,6 +22,16 @@ function saveVisitCount(count) {
 let visitCount = getVisitCount();
 
 const server = http.createServer((req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        res.writeHead(204);
+        res.end();
+        return;
+    }
+
     if (req.method === 'GET' && (req.url === '/' || req.url === '/index.html')) {
         fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
             if (err) {
