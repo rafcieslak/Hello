@@ -25,18 +25,19 @@
     <p id="visit-tracker"></p>
 
     <script>
-        fetch('/api/visit', { method: 'POST' })
-            .then(response => response.json())
-            .then(data => {
-                const visitCount = data.visitCount;
-                const trackerElement = document.getElementById('visit-tracker');
-                if (visitCount === 1) {
-                    trackerElement.textContent = 'This page has been visited 1 time.';
-                } else {
-                    trackerElement.textContent = `This page has been visited ${visitCount} times.`;
-                }
-            })
-            .catch(error => console.error('Error fetching visit count:', error));
+        let visitCount = localStorage.getItem('visitCount');
+        if (!visitCount) {
+            visitCount = 0;
+        }
+        visitCount = parseInt(visitCount) + 1;
+        localStorage.setItem('visitCount', visitCount);
+
+        const trackerElement = document.getElementById('visit-tracker');
+        if (visitCount === 1) {
+            trackerElement.textContent = 'You have visited this page 1 time.';
+        } else {
+            trackerElement.textContent = `You have visited this page ${visitCount} times.`;
+        }
     </script>
 </body>
 </html>
