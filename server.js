@@ -3,35 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 3000;
-const VISITS_FILE = path.join(__dirname, 'visits.json');
-
-function getVisitCount() {
-    try {
-        const data = fs.readFileSync(VISITS_FILE, 'utf8');
-        const parsed = JSON.parse(data);
-        return parsed.visitCount || 0;
-    } catch (err) {
-        return 0;
-    }
-}
-
-function saveVisitCount(count) {
-    fs.writeFileSync(VISITS_FILE, JSON.stringify({ visitCount: count }));
-}
-
-let visitCount = getVisitCount();
+let visitCount = 0;
 
 const server = http.createServer((req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-    if (req.method === 'OPTIONS') {
-        res.writeHead(204);
-        res.end();
-        return;
-    }
-
     if (req.method === 'GET' && (req.url === '/' || req.url === '/index.html')) {
         fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
             if (err) {
@@ -44,7 +18,6 @@ const server = http.createServer((req, res) => {
         });
     } else if (req.method === 'POST' && req.url === '/api/visit') {
         visitCount++;
-        saveVisitCount(visitCount);
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ visitCount }));
     } else if (req.method === 'GET' && req.url === '/api/visit') {
