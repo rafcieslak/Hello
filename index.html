@@ -25,8 +25,14 @@
     <p id="visit-tracker"></p>
 
     <script>
-        fetch('/api/visit', { method: 'POST' })
-            .then(response => response.json())
+        const apiUrl = window.location.protocol === 'file:' ? 'http://localhost:3000/api/visit' : '/api/visit';
+        fetch(apiUrl, { method: 'POST' })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 const visitCount = data.visitCount;
                 const trackerElement = document.getElementById('visit-tracker');
@@ -36,7 +42,10 @@
                     trackerElement.textContent = `This page has been visited ${visitCount} times.`;
                 }
             })
-            .catch(error => console.error('Error fetching visit count:', error));
+            .catch(error => {
+                console.error('Error fetching visit count:', error);
+                document.getElementById('visit-tracker').textContent = 'Error loading visit count.';
+            });
     </script>
 </body>
 </html>
